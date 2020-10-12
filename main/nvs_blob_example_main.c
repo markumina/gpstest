@@ -186,17 +186,34 @@ void app_main()
                 if (err != ESP_OK) printf("Error (%s) saving run time blob to NVS!\n", esp_err_to_name(err));
                 printf("Restarting...\n");
 
+#if 1
                 // Work with GPS data
                 printf("\nLength of GPS data: %d\n\n", sizeof(gps_data));
 
+                // Get line
                 char* gps_data_copy = (char*)malloc(sizeof(gps_data));
                 strcpy(gps_data_copy, gps_data);
-#if 1
-                char* gps_data_line = strtok(gps_data_copy, "\n");
+                char* end_data_line = NULL;
+                char* end_date = NULL;
+                char* gps_data_line = strtok_r(gps_data_copy, "\n", &end_data_line);
+                char gps_data_line_copy[1000] = {0};
+                char* gps_date = NULL;
+
+                // Process line
                 while(gps_data_line != NULL)
                 {
-                    printf("%s\n", gps_data_line);
-                    gps_data_line = strtok(NULL, "\n");
+                    //printf("%s\n", gps_data_line);
+#if 1
+                    memcpy(gps_data_line_copy, gps_data_line, strlen(gps_data_line));
+
+                    gps_date = strtok_r(gps_data_line_copy, "+", &end_date);
+                    if(gps_date != NULL)
+                    {
+                        printf("\n%s\n", gps_date);
+                    }
+#endif // 0
+
+                    gps_data_line = strtok_r(NULL, "\n", &end_data_line);
                 }
 #endif // 0
 
