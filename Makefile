@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := nvs-rw-blob
+PROJECT_NAME := gps-parse
 
 include $(IDF_PATH)/make/project.mk
 
