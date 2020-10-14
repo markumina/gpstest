@@ -16,7 +16,7 @@ Esp32 DevKitc_v4, running ESP-IDF.
 Very quick implementation of a parser. There are probably hundreds of libraries for this,
 but I wanted to mess with the data from scratch/strings, just to familiarize myself with it a bit.
 
-I made the quick assumption that trips are broken up by a pause in travel time (1 hour).
+I made the quick assumption that trips are broken up by a pause in travel time (1 hour pause).
 
 If I were to take this farther, I might offer some additional insight into what constitutes
 a trip - a pause may not be enough (maybe if you begin from the same point, you discount the pause).
