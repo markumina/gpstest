@@ -21,13 +21,13 @@ I made the quick assumption that trips are broken up by a pause in travel time (
 If I were to take this farther, I might offer some additional insight into what constitutes
 a trip - a pause may not be enough (maybe if you begin from the same point, you discount the pause).
 
-In any case, lots of interesting behaviors can be witnessed from a small dataset, I've found, as 
+In any case, lots of interesting behaviors can be witnessed from a small dataset, I've found, as
 I thought about it while parsing - main reason why I wanted to parse it so manually.
 
-In real life, I would have used the logger output of the ESP, structurized things, spell-checked
-this README, made flow of control in the code clearer, etc... (but time).
+In real life, I would have structurized things, spell-checked this README,
+made flow of control in the code clearer, etc... (but time).
 
-## Output (as tagged for 0.0.1):
+## Output (as tagged for 0.0.2):
 This output has not been checked for much accuracy, but I'm super out of time on this test.
 I am interested in discussion about the results, and had fun working with the data.
 

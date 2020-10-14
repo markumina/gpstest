@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "esp_log.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +13,11 @@
 
 void parse_gps_data(void);
 
-#define MAX_CONTINUOUS_WALK_BREAK 3600U
+// Parser adjustments
+#define MAX_CONTINUOUS_WALK_BREAK   3600U   // Rest period in seconds which delimits "Trips"
+// End Parser adjustments
+
+#define GPS_PARSE_TAG               "GPS_PARSE"
 
 void app_main()
 {
@@ -66,9 +71,8 @@ void parse_gps_data(void)
     // Process line
     while(gps_data_line != NULL)
     {
-#ifdef DEBUG_PARSE
-        printf("%s\n", gps_data_line);
-#endif // DEBUG_PARSE
+        ESP_LOGD(GPS_PARSE_TAG, "%s\n", gps_data_line);
+
         memcpy(gps_data_line_copy, gps_data_line, strlen(gps_data_line));
 
         // + or ; here? ; doesn't hurt..
@@ -76,9 +80,7 @@ void parse_gps_data(void)
 
         if(gps_value != NULL)
         {
-#ifdef DEBUG_PARSE
-            printf("\nDate: %s\n", gps_value);
-#endif // DEBUG_PARSE
+            ESP_LOGD(GPS_PARSE_TAG, "\nDate: %s\n", gps_value);
 
             // Extract date
             if(strptime(gps_value, "%Y-%m-%d %H:%M:%S ", &tm) != NULL)
@@ -93,23 +95,20 @@ void parse_gps_data(void)
                     last_epoch = current_epoch;
                 }
 
-#ifdef DEBUG_PARSE
-                printf("Epoch time current: %jd\nEpoch time last: %jd\nEpoch time diff: %jd\n"
+                ESP_LOGD(GPS_PARSE_TAG, "Epoch time current: %jd\nEpoch time last: %jd\nEpoch time diff: %jd\n"
                       ,(intmax_t)current_epoch
                       ,(intmax_t)last_epoch
                       ,(intmax_t)current_epoch - (intmax_t)last_epoch);
-#endif // DEBUG_PARSE
 
                 if(current_epoch - last_epoch > MAX_CONTINUOUS_WALK_BREAK)
                 {
-                    strncpy(gps_trip_start_date, new_gps_trip_start_date, sizeof(new_gps_trip_start_date)-1);   
+                    strncpy(gps_trip_start_date, new_gps_trip_start_date, sizeof(new_gps_trip_start_date)-1);
                     strncpy(new_gps_trip_start_date, gps_value, sizeof(new_gps_trip_start_date)-1);
 
                     // TBD - check distance between this walk and the last, to diff between rest and walk.
                     ++number_of_walks;
-#ifdef DEBUG_PARSE
-                    printf("\nFound walk number: %d??\n\n", number_of_walks);
-#endif // DEBUG_PARSE
+
+                    ESP_LOGD(GPS_PARSE_TAG, "\nFound walk number: %d??\n\n", number_of_walks);
                     b_trip_end_detected = true;
                 }
 
@@ -121,9 +120,7 @@ void parse_gps_data(void)
         current_latitude = atof(strtok_r(NULL, ";", &end_working_data_line));
         current_longitude = atof(strtok_r(NULL, ";", &end_working_data_line));
 
-#ifdef DEBUG_PARSE
-        printf("\n\nlatitude: %lfF\nlongititude: %lfF\n" ,current_latitude ,current_longitude);
-#endif // DEBUG_PARSE
+        ESP_LOGD(GPS_PARSE_TAG, "\n\nlatitude: %lfF\nlongititude: %lfF\n" ,current_latitude ,current_longitude);
 
         if(true == b_first_pass)
         {
