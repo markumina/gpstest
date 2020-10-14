@@ -1,67 +1,117 @@
-# Non-Volatile Storage (NVS) Read and Write Example
+# Quick GPS parser
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## Based on:
+- Given dataset, which I placed in gps_data.h (was going to toss it in an nvm file, but no time).
+- Given instructions:
+```
+   For this project, you will write a simple program in C that:
+   a) Reads this data set
+   b) Separates the individual walks
+   c) Shows summary information for each walk
+```
+## Hardware Used:
+Esp32 DevKitc_v4, running ESP-IDF.
 
-This example demonstrates how to read and write a single integer value and a blob (binary large object) using NVS to preserve them between ESP32 module restarts.
+## Thoughts/Notes:
+Very quick implementation of a parser. There are probably hundreds of libraries for this,
+but I wanted to mess with the data from scratch/strings, just to familiarize myself with it a bit.
 
-  * value - tracks number of ESP32 module soft and hard restarts.
-  * blob - contains a table with module run times. The table is read from NVS to dynamically allocated RAM. New run time is added to the table on each manually triggered soft restart and written back to NVS. Triggering is done by pulling down GPIO0.
+I made the quick assumption that trips are broken up by a pause in travel time (1 hour).
 
-Example also shows how to implement diagnostics if read / write operation was successful. 
+If I were to take this farther, I might offer some additional insight into what constitutes
+a trip - a pause may not be enough (maybe if you begin from the same point, you discount the pause).
 
-Detailed functional description of NVS and API is provided in [documentation](https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/storage/nvs_flash.html).
+In any case, lots of interesting behaviors can be witnessed from a small dataset, I've found, as 
+I thought about it while parsing - main reason why I wanted to parse it so manually.
 
-If not done already, consider checking simpler example *storage/nvs_rw_value*, that has been used as a starting point for preparing this one. 
+In real life, I would have used the logger output of the ESP, structurized things, spell-checked
+this README, made flow of control in the code clearer, etc... (but time).
 
-## How to use example
-
-### Hardware required
-
-This example can be run on most common development boards which have an active button connected to GPIO0. On most boards, this button is labeled as "Boot". When pressed, the button connects GPIO0 to ground.
-
-### Build and flash
-
-Build the project and flash it to the board, then run monitor tool to view serial output:
+## Output (as tagged for 0.0.1):
+This output has not been checked for much accuracy, but I'm super out of time on this test.
+I am interested in discussion about the results, and had fun working with the data.
 
 ```
-idf.py -p PORT flash monitor
+Length of GPS data: 54124
+
+
+
+******* Trip 1 Results *******
+
+Trip started @ . . . . . . . . . . . .  2018-03-13 21:15:01 +0000
+
+Trip miles walked . . . . . . . . . . . 0.359271
+
+Trip origin (long./lat.) . . . . . . .  -73.984138, 40.702454
+
+Trip destination (long./lat.) . . . . . -73.984169, 40.702374
+
+
+
+******* Trip 2 Results *******
+
+Trip started @ . . . . . . . . . . . .  2018-03-13 23:50:12 +0000
+
+Trip miles walked . . . . . . . . . . . 2.998486
+
+Trip origin (long./lat.) . . . . . . .  -73.986771, 40.736820
+
+Trip destination (long./lat.) . . . . . -73.986694, 40.736847
+
+
+
+******* Trip 3 Results *******
+
+Trip started @ . . . . . . . . . . . .  2018-03-14 11:39:44 +0000
+
+Trip miles walked . . . . . . . . . . . 0.417593
+
+Trip origin (long./lat.) . . . . . . .  -73.986778, 40.736866
+
+Trip destination (long./lat.) . . . . . -73.986923, 40.736935
+
+
+
+******* Trip 4 Results *******
+
+Trip started @ . . . . . . . . . . . .  2018-03-14 12:59:28 +0000
+
+Trip miles walked . . . . . . . . . . . 0.962967
+
+Trip origin (long./lat.) . . . . . . .  -73.987099, 40.737034
+
+Trip destination (long./lat.) . . . . . -73.990479, 40.735126
+
+
+
+******* Trip 5 Results *******
+
+Trip started @ . . . . . . . . . . . .  2018-03-14 21:59:52 +0000
+
+Trip miles walked . . . . . . . . . . . 1.432216
+
+Trip origin (long./lat.) . . . . . . .  -73.989983, 40.737698
+
+Trip destination (long./lat.) . . . . . -73.986755, 40.736843
+
+
+
+******* Additional Results (pertaining to total dataset) *******
+
+Total number of walks . . . . . . . . . . . . .  5
+
+Total miles walked . . . . . . . . . . . . . . . 6.514759
+
+Total origin/dest straight line distance . . . . 2.388467
+
+
+***NOTE:
+
+ -Total number of walks based on 3600 second travel break.
+
+
+End output
 ```
 
-(To exit the serial monitor, type ``Ctrl-]``.)
 
-See the Getting Started Guide for full steps to configure and use ESP-IDF to build projects.
-
-## Example Output
-
-First run:
-```
-Restart counter = 0
-Run time:
-Nothing saved yet!
-```
-
-At this point, press "Boot" button and hold it for a second. The board will perform software restart, printing:
-
-```
-Restarting...
-```
-
-After booting again, restart counter and run time array will be printed:
-
-```
-Restart counter = 1
-Run time:
-1: 5110
-```
-
-After pressing "Boot" once more:
-
-```
-Restart counter = 2
-Run time:
-1: 5110
-2: 5860
-```
-
-To reset the counter and run time array, erase the contents of flash memory using `idf.py erase_flash`, then upload the program again as described above.
 
