@@ -14,7 +14,7 @@ Esp32 DevKitc_v4, running ESP-IDF.
 
 ## Thoughts/Notes:
 Very quick implementation of a parser. There are probably hundreds of libraries for this,
-but I wanted to mess with the data from scratch/strings, just to familiarize myself with it a bit.
+but I wanted to mess with the data from scratch/strings, just to gain a bit of intuition about GPS data.
 
 I made the quick assumption that trips are broken up by a pause in travel time (1 hour pause).
 
