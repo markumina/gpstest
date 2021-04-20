@@ -1,4 +1,4 @@
-# Quick GPS parser
+# Quick ESP-IDF GPS parser
 
 ## Based on:
 - Given dataset, which I placed in gps_data.h (was going to toss it in an nvm file, but no time).
